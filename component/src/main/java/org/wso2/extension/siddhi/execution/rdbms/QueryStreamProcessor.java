@@ -70,7 +70,10 @@ import java.util.stream.Collectors;
                 ),
                 @Parameter(
                         name = "attribute.definition.list",
-                        description = "Comma separated list of `<AttributeName AttributeType>`",
+                        description = "Comma separated list of `<AttributeName AttributeType>`. " +
+                                "It is expected that the SQL query will return the attributes in order, as in if one " +
+                                "attribute is defined here, the SQL query should return one column result set, " +
+                                "if more than one column is returned then the first column will be processed.",
                         type = DataType.STRING
                 )
         },
@@ -78,7 +81,7 @@ import java.util.stream.Collectors;
                 @ReturnAttribute(
                         name = "custom",
                         description = "The return attributes will be the ones defined in the parameter" +
-                                "'attribute.definition.list'.",
+                                "`attribute.definition.list`.",
                         type = DataType.STRING
                 )
         },
@@ -87,8 +90,11 @@ import java.util.stream.Collectors;
                         syntax = "from TriggerStream#rdbms:query('SAMPLE_DB', 'select * from " +
                                 "Transactions_Table', 'creditcardno string, country string, transaction string," +
                                 " amount int')  \n" +
-                                "insert all events into  recordStream;",
-                        description = "Events inserted into recordStream includes all records matched for the query."
+                                "insert into  recordStream;",
+                        description = "Events inserted into recordStream includes all records matched for the query " +
+                                "i.e a single event will be generated for each record retrieved from the datasource. " +
+                                "The event will include as additional attributes, the attributes defined in the " +
+                                "function(creditcardno, country, transaction, amount)."
                 )
         }
 )
